@@ -2,6 +2,7 @@ package proc
 
 import (
 	"encoding/binary"
+        "io"
 
 	"golang.org/x/arch/arm64/arm64asm"
 )
@@ -47,10 +48,8 @@ func (inst *AsmInstruction) Text(flavour AssemblyFlavour, bi *BinaryInfo) string
 		text = arm64asm.GNUSyntax(arm64asm.Inst(*inst.Inst))
 	case GoFlavour:
 		text = arm64asm.GoSyntax(arm64asm.Inst(*inst.Inst), inst.Loc.PC, bi.symLookup, readerAt)
-	case IntelFlavour:
-		fallthrough
 	default:
-		text = arm64asm.IntelSyntax(arm64asm.Inst(*inst.Inst), inst.Loc.PC, bi.symLookup)
+		text = arm64asm.GNUSyntax(arm64asm.Inst(*inst.Inst))  //TODO should GNUSyntax be the default 
 	}
 
 	return text
