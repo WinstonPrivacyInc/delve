@@ -11,7 +11,7 @@ var maxInstructionLength uint64 = 15
 type ArchInst arm64asm.Inst
 
 func asmDecode(mem []byte, pc uint64) (*ArchInst, error) {
-	inst, err :=arm64asm.Decode(mem, 64)
+	inst, err :=arm64asm.Decode(mem)
 	if err != nil {
 		return nil, err
 	}
@@ -40,12 +40,13 @@ func (inst *AsmInstruction) Text(flavour AssemblyFlavour, bi *BinaryInfo) string
 	}
 
 	var text string
+        var readerAt io.ReaderAt //TODO fix this type parameter in GoSyntax
 
 	switch flavour {
 	case GNUFlavour:
-		text = arm64asm.GNUSyntax(arm64asm.Inst(*inst.Inst), inst.Loc.PC, bi.symLookup)
+		text = arm64asm.GNUSyntax(arm64asm.Inst(*inst.Inst))
 	case GoFlavour:
-		text = arm64asm.GoSyntax(arm64asm.Inst(*inst.Inst), inst.Loc.PC, bi.symLookup)
+		text = arm64asm.GoSyntax(arm64asm.Inst(*inst.Inst), inst.Loc.PC, bi.symLookup, readerAt)
 	case IntelFlavour:
 		fallthrough
 	default:
