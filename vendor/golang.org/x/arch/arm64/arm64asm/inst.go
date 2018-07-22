@@ -28,6 +28,7 @@ func (op Op) String() string {
 type Inst struct {
 	Op   Op     // Opcode mnemonic
 	Enc  uint32 // Raw encoding bits.
+        Len  int   //  Length of encoding in bytes
 	Args Args   // Instruction arguments, in ARM manual order.
 }
 
